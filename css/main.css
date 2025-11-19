@@ -5,15 +5,15 @@ body {
 }
 
 img {
-    height: 20vh;
-    margin: 0 4vw;
+    height: 20vmin;
+    margin: 0 4vmin;
 }
 
 .cpu-hand,
 .player-hand {
     display: flex;
     justify-content: center;
-    height: 21vh;
+    height: 21vmin;
 }
 
 header,
@@ -23,12 +23,25 @@ header,
     justify-content: space-around;
 }
 
+header{
+    height: 20vh;
+}
+
+.player-hand,.cpu-hand{
+    height: 18vh;
+}
+
+.center{
+    height: 40vh;
+}
+
 .field {
     display: flex;
     align-items: center;
     justify-content: space-around;
     background-color: rgb(5, 155, 5);
-    width: 60vw;
+    height: 90%;
+    width: 60vmin;
 }
 
 .player,
@@ -37,22 +50,22 @@ header,
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 30vh;
-    width: 20vw;
+    height: 30vmin;
+    width: 20vmin;
 }
 
 .deck {
-    height: 30vh;
-    width: 20vw;
+    height: 30vmin;
+    width: 20vmin;
 }
 
 .score-zone {
-    width: 20vw;
-    height: 10vh
+    width: 20vmin;
+    height: 10vmin
 }
 
 .btn-zone {
-    width: 20vw;
+    width: 20vmin;
 }
 
 .start {
@@ -69,7 +82,7 @@ header,
 
 
 .field-card {
-    width: 10vw;
+    width: 10vmin;
 }
 
 .hand-card,
@@ -77,7 +90,7 @@ header,
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 60vw;
+    width: 60vmin;
 }
 
 .remaining-card {
@@ -85,7 +98,7 @@ header,
 }
 
 .remaining-card img {
-    height: 8vh;
+    height: 8vmin;
     width: auto;
 }
 
@@ -102,7 +115,7 @@ button:hover {
 }
 
 .online {
-    width: 60%;
+    width: 60vmin;
     display: flex;
     justify-content: space-around;
 }
@@ -115,4 +128,16 @@ button:hover {
     display: flex;
     flex-direction: column;
     width: 100px;
+}
+
+#room-id,#next{
+    color: black;
+    background-color: white;
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+
+.start a{
+    color: white;
 }

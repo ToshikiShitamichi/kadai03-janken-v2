@@ -1,7 +1,7 @@
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-import { getDatabase, ref, set, get, onValue, update } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";;
+import { getDatabase, ref, set, get, onValue, update ,remove} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";;
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -81,13 +81,6 @@ function subscribeRoom(roomNum) {
         if (p1_select) {
             if (player_tag == 2) {
                 window.cpu_hand = p1_select
-                if (cpu_hand.slice(0, 1) == "g") {
-                    g_count -= 1
-                } else if (cpu_hand.slice(0, 1) == "c") {
-                    c_count -= 1
-                } else if (cpu_hand.slice(0, 1) == "p") {
-                    p_count -= 1
-                }
                 $("#cpu-field-" + battle_count).hide()
                 $("#cpu-board").show();
             }
@@ -95,13 +88,7 @@ function subscribeRoom(roomNum) {
         if (p2_select) {
             if (player_tag == 1) {
                 window.cpu_hand = p2_select
-                if (cpu_hand.slice(0, 1) == "g") {
-                    g_count -= 1
-                } else if (cpu_hand.slice(0, 1) == "c") {
-                    c_count -= 1
-                } else if (cpu_hand.slice(0, 1) == "p") {
-                    p_count -= 1
-                }
+
                 $("#cpu-field-" + battle_count).hide()
                 $("#cpu-board").show();
             }
@@ -109,10 +96,17 @@ function subscribeRoom(roomNum) {
         if (p1_select && p2_select) {
             $("#cpu-board").delay(300).fadeOut(500);
             $("#cpu-" + cpu_hand.slice(0, 1)).delay(1800).fadeIn(500);
+            if (cpu_hand.slice(0, 1) == "g") {
+                g_count -= 1
+            } else if (cpu_hand.slice(0, 1) == "c") {
+                c_count -= 1
+            } else if (cpu_hand.slice(0, 1) == "p") {
+                p_count -= 1
+            }
             judge()
             update(roomRef, {
                 "player1/select": null,
-                "player2/select": null
+                "player2/select": null,
             })
         }
         if (p1_next && p2_next) {
@@ -120,10 +114,13 @@ function subscribeRoom(roomNum) {
             battle_count += 1
             update(roomRef, {
                 "player1/next": null,
-                "player2/next": null
+                "player2/next": null,
             })
         }
     });
 }
 
-
+window.deleteRoom = async function(roomNum) {
+    const roomPath = roomNum.toString();
+    await remove(ref(db, roomPath));
+};

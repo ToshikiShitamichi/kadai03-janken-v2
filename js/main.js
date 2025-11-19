@@ -35,6 +35,11 @@ var battle_count = 1
 
 var hand_card_html = '<div class="hand-card"><img id="player-field-1" class="player-hand-card" src="" alt=""><img id="player-field-2" class="player-hand-card" src="" alt=""><img id="player-field-3" class="player-hand-card" src="" alt=""><img id="player-field-4" class="player-hand-card" src="" alt="">'
 
+$("input[type=number]").on('keyup', function (e) {
+    if (e.key === 'Enter' || e.keyCode === 13) {
+        $('#join-room').trigger('click');
+    }
+})
 
 // ボード初期化関数
 function board_hide() {
@@ -216,11 +221,11 @@ function judge() {
 
 // 6.次へ
 $("#next").on("click", async function () {
+    $("#next").hide();
     const roomNum = window.roomNum;
     const db = window.db;
     const ref = window.firebaseRef;
     const set = window.firebaseSet;
-    const tag = window.player_tag;
 
     if (player_tag == 1) {
         let dbRef = ref(db, roomNum + "/player1/next");
@@ -235,7 +240,6 @@ $("#next").on("click", async function () {
 
 function next() {
     board_hide(); //ボード初期化
-    $("#next").hide();
 
     $(".player-hand").css({ "pointer-events": "auto" }); //クリック許可
 
@@ -247,7 +251,10 @@ function next() {
 
 // 7.終了
 $("#finish").on("click", function () {
-    alert(win_count + "勝" + lose_count + "敗" + draw_count + "分\n勝率:" + (Math.round(win_count / 4 * 100)) + "%")
+    alert(win_count + "勝" + lose_count + "敗" + draw_count + "分\n勝率:" + (Math.round(win_count / 4 * 1000) / 10) + "%")
+    if (window.player_tag == 1) {
+        window.deleteRoom(window.roomNum);
+    }
     location.reload()
 });
 
