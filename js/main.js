@@ -27,7 +27,7 @@ var lose_count = 0
 //引分数
 var draw_count = 0
 //対戦回数
-var battle_count = 0
+var battle_count = 1
 
 // let
 // オブジェクト
@@ -38,72 +38,13 @@ var hand_card_html = '<div class="hand-card"><img id="player-field-1" class="pla
 
 // ボード初期化関数
 function board_hide() {
-    $("#player-g,#player-c,#player-p,#cpu-g,#cpu-c,#cpu-p,#judge-msg").hide();
-}
-
-// カード配布関数
-function reset() {
-    $(".player-hand").html(hand_card_html);
-
-    //カードマスター
-    cards = ["g-1", "g-2", "g-3", "g-4", "g-5", "c-1", "c-2", "c-3", "c-4", "c-5", "p-1", "p-2", "p-3", "p-4", "p-5"]
-    //カード枚数
-    cards_count = 15
-    //プレイヤー手札
-    player_hands = []
-    //CPU手札
-    cpu_hands = []
-    //グー枚数
-    g_count = 0
-    //チョキ枚数
-    c_count = 0
-    //パー枚数
-    p_count = 0
-    for (let i = 0; i < 4; i++) {
-
-        let select_num = Math.floor(Math.random() * cards_count)
-        let select_card = cards[select_num]
-
-        player_hands.push(select_card);
-        cards.splice(select_num, 1)
-        cards_count -= 1;
-        if (select_card.slice(0, 1) == "g") {
-            g_count += 1
-        } else if (select_card.slice(0, 1) == "c") {
-            c_count += 1
-        } else if (select_card.slice(0, 1) == "p") {
-            p_count += 1
-        }
-
-        $("#player-field-" + (i + 1)).attr("id", select_card);
-        $("#" + select_card).attr("src", "./img/" + select_card.slice(0, 1) + ".png");
-    }
-    for (let i = 0; i < 4; i++) {
-        let select_num = Math.floor(Math.random() * cards_count)
-        let select_card = cards[select_num]
-
-        cpu_hands.push(select_card);
-        cards.splice(select_num, 1)
-        cards_count -= 1;
-        if (select_card.slice(0, 1) == "g") {
-            g_count += 1
-        } else if (select_card.slice(0, 1) == "c") {
-            c_count += 1
-        } else if (select_card.slice(0, 1) == "p") {
-            p_count += 1
-        }
-    }
-    $("#remaining-g").text("×" + g_count);
-    $("#remaining-c").text("×" + c_count);
-    $("#remaining-p").text("×" + p_count);
-
-    console.log("player-hands:" + player_hands)
-    console.log("cpu-hands:" + cpu_hands)
+    $("#player-g,#player-c,#player-p,#cpu-g,#cpu-c,#cpu-p,#judge-msg,#cpu-board").hide();
 }
 
 // 1.スタート
 $("body").addClass("remove-scrolling");
 $(".content").hide();
+
 function start() {
     $(".start").fadeOut(1000);
     $(".content").delay(1000).fadeIn(500);
@@ -111,23 +52,10 @@ function start() {
     $("#next").hide();
     $("#finish").hide();
     board_hide();
+}
 
-    // 2.カード配布
-    // reset();
-    //カードマスター
-    cards = ["g-1", "g-2", "g-3", "g-4", "g-5", "c-1", "c-2", "c-3", "c-4", "c-5", "p-1", "p-2", "p-3", "p-4", "p-5"]
-    //カード枚数
-    cards_count = 15
-    //プレイヤー手札
-    player_hands = []
-    //CPU手札
-    cpu_hands = []
-    //グー枚数
-    g_count = 0
-    //チョキ枚数
-    c_count = 0
-    //パー枚数
-    p_count = 0
+function create_start() {
+    start()
     for (let i = 0; i < 4; i++) {
 
         let select_num = Math.floor(Math.random() * cards_count)
@@ -165,19 +93,47 @@ function start() {
     $("#remaining-g").text("×" + g_count);
     $("#remaining-c").text("×" + c_count);
     $("#remaining-p").text("×" + p_count);
+}
 
-    console.log("player-hands:" + player_hands)
-    console.log("cpu-hands:" + cpu_hands)
+function join_start(player_hands, cpu_hands) {
+    start()
 
-};
+    i = 0
+    player_hands.forEach(select_card => {
+        if (select_card.slice(0, 1) == "g") {
+            g_count += 1
+        } else if (select_card.slice(0, 1) == "c") {
+            c_count += 1
+        } else if (select_card.slice(0, 1) == "p") {
+            p_count += 1
+        }
+
+        $("#player-field-" + (i + 1)).attr("id", select_card);
+        $("#" + select_card).attr("src", "./img/" + select_card.slice(0, 1) + ".png");
+        i += 1
+    })
+    cpu_hands.forEach(select_card => {
+        if (select_card.slice(0, 1) == "g") {
+            g_count += 1
+        } else if (select_card.slice(0, 1) == "c") {
+            c_count += 1
+        } else if (select_card.slice(0, 1) == "p") {
+            p_count += 1
+        }
+    });
+
+    $("#remaining-g").text("×" + g_count);
+    $("#remaining-c").text("×" + c_count);
+    $("#remaining-p").text("×" + p_count);
+}
 
 // 3.カード選択
-$(document).on("click", ".player-hand-card", function () {
+$(document).on("click", ".player-hand-card", async function () {
     $("#reset").hide();
     $(".player-hand").css({ "pointer-events": "none" }); //クリック不可
     $("#score").hide();
 
-    let player_hand = $(this).attr("id");
+    window.player_hand = $(this).attr("id");
     if (player_hand.slice(0, 1) == "g") {
         g_count -= 1
     } else if (player_hand.slice(0, 1) == "c") {
@@ -189,20 +145,25 @@ $(document).on("click", ".player-hand-card", function () {
     $("#" + player_hand).hide();
     $("#player-" + player_hand.slice(0, 1)).show();
 
-    // 4.相手カード表示
-    let cpu_hand = cpu_hands[0]
-    cpu_hands.splice(0, 1)
-    if (cpu_hand.slice(0, 1) == "g") {
-        g_count -= 1
-    } else if (cpu_hand.slice(0, 1) == "c") {
-        c_count -= 1
-    } else if (cpu_hand.slice(0, 1) == "p") {
-        p_count -= 1
+
+    const player_tag = window.player_tag;
+    const roomNum = window.roomNum;
+    const db = window.db;
+    const ref = window.firebaseRef;
+    const set = window.firebaseSet;
+
+    if (player_tag == 1) {
+        let dbRef = ref(db, roomNum + "/player1/select");
+        let msg = player_hand
+        await set(dbRef, msg)
+    } else if (player_tag == 2) {
+        let dbRef = ref(db, roomNum + "/player2/select");
+        let msg = player_hand
+        await set(dbRef, msg)
     }
+})
 
-    $("#cpu-board").delay(300).fadeOut(500);
-    $("#cpu-" + cpu_hand.slice(0, 1)).delay(1800).fadeIn(500);
-
+function judge() {
     // 5.勝敗判定
     if (player_hand.slice(0, 1) == "g") {
         if (cpu_hand.slice(0, 1) == "g") {
@@ -241,6 +202,7 @@ $(document).on("click", ".player-hand-card", function () {
     }
     $("#judge-msg").delay(2300).fadeIn(0);
 
+
     $("#score").html(win_count + "勝" + lose_count + "敗" + "<br>" + draw_count + "分")
     $("#score").delay(2300).fadeIn(0);
 
@@ -250,24 +212,42 @@ $(document).on("click", ".player-hand-card", function () {
         $("#finish").delay(2300).fadeIn(0);
     }
 
-});
+}
 
 // 6.次へ
 $("#next").on("click", async function () {
+    const roomNum = window.roomNum;
+    const db = window.db;
+    const ref = window.firebaseRef;
+    const set = window.firebaseSet;
+    const tag = window.player_tag;
+
+    if (player_tag == 1) {
+        let dbRef = ref(db, roomNum + "/player1/next");
+        let msg = true
+        await set(dbRef, msg)
+    } else if (player_tag == 2) {
+        let dbRef = ref(db, roomNum + "/player2/next");
+        let msg = true
+        await set(dbRef, msg)
+    }
+});
+
+function next() {
     board_hide(); //ボード初期化
     $("#next").hide();
-    $("#cpu-field-" + (win_count + lose_count + draw_count)).hide()
 
-    $("#cpu-board").show();
     $(".player-hand").css({ "pointer-events": "auto" }); //クリック許可
 
     $("#remaining-g").text("×" + g_count);
     $("#remaining-c").text("×" + c_count);
     $("#remaining-p").text("×" + p_count);
-});
+}
+
 
 // 7.終了
 $("#finish").on("click", function () {
     alert(win_count + "勝" + lose_count + "敗" + draw_count + "分\n勝率:" + (Math.round(win_count / 4 * 100)) + "%")
     location.reload()
 });
+

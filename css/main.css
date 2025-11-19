@@ -101,17 +101,17 @@ button:hover {
     color: black;
 }
 
-.online{
-    width: 35%;
+.online {
+    width: 60%;
     display: flex;
     justify-content: space-around;
 }
 
-.online button{
+.online button {
     width: 100px;
 }
 
-.join-room{
+.join-room {
     display: flex;
     flex-direction: column;
     width: 100px;
